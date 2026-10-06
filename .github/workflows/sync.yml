@@ -1,0 +1,26 @@
+# Free scheduler: GitHub Actions. Add the secrets in  Settings -> Secrets and variables -> Actions.
+name: Sync movies
+on:
+  schedule:
+    - cron: "0 */6 * * *"     # trending + new, every 6 hours
+    - cron: "30 3 * * *"      # movie catalogue, daily
+  workflow_dispatch:
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    env:
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - run: pip install httpx postgrest python-dotenv
+      - name: Trending + new
+        if: github.event.schedule != '30 3 * * *'
+        run: python -m jobs.sync_movies --trending --new
+      - name: Catalogue
+        if: github.event.schedule == '30 3 * * *' || github.event_name == 'workflow_dispatch'
+        run: python -m jobs.sync_movies --movies 5

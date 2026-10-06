@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#050505">
+  <title>CineMind - AI Movie Assistant</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <!-- ============ AUTH ============ -->
+  <div id="auth" class="auth">
+    <form id="authForm" class="auth-card" autocomplete="on">
+      <div class="brand big"><span class="dot"></span>CineMind</div>
+      <p class="muted" id="authSub">Sign in to get movie picks that learn your taste.</p>
+      <input id="email" type="email" placeholder="Email" required autocomplete="email">
+      <input id="password" type="password" placeholder="Password (min 6 characters)" required minlength="6" autocomplete="current-password">
+      <button class="btn primary" id="authSubmit" type="submit">Log in</button>
+      <p class="auth-msg" id="authMsg" role="alert"></p>
+      <button class="link" id="authToggle" type="button">No account? Sign up</button>
+    </form>
+  </div>
+
+  <!-- ============ APP ============ -->
+  <div id="app" class="app hidden" data-tab="chat">
+    <header class="topbar">
+      <div class="brand"><span class="dot"></span>CineMind</div>
+      <div class="nav">
+        <button class="btn ghost small" id="navHome">Discover</button>
+        <button class="btn primary small" id="navForYou">&#10024; For You</button>
+      </div>
+      <div class="top-right"><span class="muted small" id="userEmail"></span><button class="btn ghost small" id="logout">Log out</button></div>
+    </header>
+
+    <main class="layout">
+      <section class="results" id="resultsPanel" aria-label="Movie results">
+        <div id="resultsView" class="results-view"></div>
+      </section>
+
+      <section class="chat" id="chatPanel" aria-label="Chat">
+        <div class="chat-head">
+          <strong>Assistant</strong>
+          <div>
+            <button class="btn ghost small" id="historyBtn">History</button>
+            <button class="btn ghost small" id="newChat">New chat</button>
+          </div>
+          <div id="history" class="history hidden"></div>
+        </div>
+        <div id="messages" class="messages" aria-live="polite"></div>
+        <div class="composer">
+          <textarea id="input" rows="1" maxlength="1000" placeholder="Ask for movies... (Enter to send, Shift+Enter for a new line)"></textarea>
+          <button class="btn primary send" id="send" aria-label="Send">Send</button>
+        </div>
+      </section>
+    </main>
+
+    <nav class="tabs" aria-label="Switch view">
+      <button data-tab-btn="chat" class="on">Chat</button>
+      <button data-tab-btn="results">Movies<span class="pip hidden" id="pip"></span></button>
+    </nav>
+  </div>
+
+  <div id="toast" class="toast hidden" role="status"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
